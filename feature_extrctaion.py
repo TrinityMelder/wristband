@@ -38,9 +38,6 @@ def process_audio(file_path):
     print("Frequency Spectrum:")
     print(spec)
 
-# Example usage with an uploaded audio file
 uploaded = files.upload()
 file_path = list(uploaded.keys())[0]
-
-# Process the audio and extract features
 process_audio(file_path)
