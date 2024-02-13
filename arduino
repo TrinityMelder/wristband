@@ -1,0 +1,34 @@
+#include <Wire.h>
+#include <Adafruit_DRV2605.h>
+
+Adafruit_DRV2605 drv;
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // Wait for serial port to connect.
+  }
+  
+  drv.begin();
+  drv.selectLibrary(1);
+  drv.setMode(DRV2605_MODE_INTTRIG);
+}
+
+void loop() {
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    if (command.startsWith("V")) {
+      int commaIndex = command.indexOf(',');
+      if (commaIndex != -1) {
+        int duration = command.substring(1, commaIndex).toInt();
+        int amplitude = command.substring(commaIndex + 1).toInt();
+        if (duration > 0 && amplitude >= 0 && amplitude <= 255) {
+          drv.setRealtimeValue(amplitude);
+          drv.go();
+          delay(duration);
+          drv.stop();
+        }
+      }
+    }
+  }
+}
